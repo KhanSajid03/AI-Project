@@ -1,7 +1,22 @@
+import json
+from contextlib import redirect_stderr, redirect_stdout
+from io import BytesIO, StringIO
 import unittest
 from datetime import datetime, timezone
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
-from top_news import Article, cluster_articles, parse_feed
+from top_news import (
+    Article,
+    cluster_articles,
+    extract_article_text,
+    environ,
+    load_env_file,
+    main,
+    parse_feed,
+    summarize_article,
+)
 
 
 class ParseFeedTests(unittest.TestCase):
@@ -105,6 +120,137 @@ class ClusterArticlesTests(unittest.TestCase):
             jordan_topic.sources,
             {"One News", "Two News", "Three News", "Four News"},
         )
+
+
+class ArticleSummaryTests(unittest.TestCase):
+    def test_loads_env_file_without_overriding_existing_environment(self) -> None:
+        with TemporaryDirectory() as directory:
+            env_path = Path(directory) / ".env"
+            env_path.write_text(
+                "# API configuration\n"
+                "OPENAI_API_KEY='file-key'\n"
+                "OPENAI_MODEL=gpt-test\n",
+                encoding="utf-8",
+            )
+            with patch.dict(
+                "top_news.environ",
+                {"OPENAI_API_KEY": "existing-key"},
+                clear=True,
+            ):
+                load_env_file(env_path)
+
+                self.assertEqual(
+                    environ["OPENAI_API_KEY"],
+                    "existing-key",
+                )
+                self.assertEqual(
+                    environ["OPENAI_MODEL"],
+                    "gpt-test",
+                )
+
+    def test_extracts_article_paragraphs_without_navigation(self) -> None:
+        document = """
+        <html><body>
+          <nav><p>Navigation text should not be included.</p></nav>
+          <article>
+            <h1>Article heading</h1>
+            <p>This is the article body with enough text to be extracted.</p>
+          </article>
+          <script><p>Script text should not be included.</p></script>
+        </body></html>
+        """
+
+        text = extract_article_text(document)
+
+        self.assertIn("Article heading", text)
+        self.assertIn("This is the article body", text)
+        self.assertNotIn("Navigation text", text)
+        self.assertNotIn("Script text", text)
+
+    def test_sends_source_grounded_prompt_to_openai_responses_api(self) -> None:
+        article = Article(
+            "Example headline",
+            "https://example.com/story",
+            "Example News",
+            datetime(2026, 10, 23, 10, 0, tzinfo=timezone.utc),
+        )
+        response = BytesIO(
+            json.dumps(
+                {
+                    "output": [
+                        {
+                            "type": "message",
+                            "content": [
+                                {
+                                    "type": "output_text",
+                                    "text": "A concise article summary.",
+                                }
+                            ],
+                        }
+                    ]
+                }
+            ).encode()
+        )
+
+        with patch("top_news.urllib.request.urlopen", return_value=response) as urlopen:
+            summary = summarize_article(article, "Verified article text.", "test-key", "test-model")
+
+        self.assertEqual(summary, "A concise article summary.")
+        request = urlopen.call_args.args[0]
+        self.assertEqual(request.full_url, "https://api.openai.com/v1/responses")
+        self.assertEqual(request.get_header("Authorization"), "Bearer test-key")
+        sent_body = json.loads(request.data)
+        self.assertEqual(sent_body["model"], "test-model")
+        self.assertIn("Verified article text.", sent_body["input"])
+
+    def test_main_writes_five_source_linked_summaries(self) -> None:
+        published = datetime.now(timezone.utc)
+        headlines = [
+            "Earthquake disrupts transport in Peru",
+            "Central bank raises rates after inflation report",
+            "New telescope discovers distant planet",
+            "Wildfire prompts evacuation in coastal town",
+            "National team wins international football final",
+        ]
+        articles = [
+            Article(
+                title,
+                f"https://example.com/story-{index}",
+                "Example News",
+                published,
+            )
+            for index, title in enumerate(headlines)
+        ]
+        with TemporaryDirectory() as directory:
+            output_path = Path(directory) / "summary.txt"
+            output = StringIO()
+            errors = StringIO()
+            with (
+                patch.dict(
+                    "top_news.environ",
+                    {"OPENAI_API_KEY": "test-key"},
+                    clear=True,
+                ),
+                patch("top_news.fetch_feed", return_value=("Example News", articles)),
+                patch(
+                    "top_news.fetch_article_text",
+                    return_value="Verified article content.",
+                ),
+                patch(
+                    "top_news.summarize_article",
+                    side_effect=lambda article, *_: f"Summary for {article.title}.",
+                ),
+                redirect_stdout(output),
+                redirect_stderr(errors),
+            ):
+                result = main(["--output", str(output_path)])
+
+            summary_file = output_path.read_text(encoding="utf-8")
+
+        self.assertEqual(result, 0)
+        self.assertEqual(summary_file.count("   Summary:"), 5)
+        self.assertIn("https://example.com/story-", summary_file)
+        self.assertIn("Summary for Earthquake disrupts transport in Peru.", summary_file)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,33 @@
+Weekly news summaries (last 7 days, UTC)
+Generated: 2026-10-26T21:28:52.866638+00:00
+Summarized with OpenAI model: gpt-4.1-mini
+
+1. Lula wins fourth term in dramatic Brazil election comeback
+   Topic coverage: 4 source(s), 14 headline(s)
+   Article source: BBC News
+   Article URL: https://www.bbc.co.uk/news/articles/ckm23y3mg1yyo?at_medium=RSS&at_campaign=rss
+   Summary: Brazil's President Luiz Inácio Lula da Silva has won a fourth term with 51.79% of the vote, defeating right-wing challenger Flávio Bolsonaro, who has refused to recognise the result and called for its annulment. The election was marked by a Supreme Court decision to extend voting hours nationwide, a move supported by both campaigns, and confirmed by the Supreme Electoral Court as not affecting the outcome. Despite international congratulations, Lula faces significant challenges including a divided country, a hostile Congress, Bolsonaro's rejection of the result, and negative market reactions.
+
+2. What Vucic’s defeat means for Serbia’s foreign policy
+   Topic coverage: 3 source(s), 4 headline(s)
+   Article source: Al Jazeera – Breaking News, World News and Video from Al Jazeera
+   Article URL: https://www.aljazeera.com/news/2026/10/26/what-vucics-defeat-means-for-serbias-foreign-policy?traffic_source=rss
+   Summary: Serbia's opposition victory over Aleksandar Vucic's Serbian Progressive Party (SNS) ends 14 years of authoritarian rule, prompting questions about shifts in the country's foreign policy. Experts interviewed by Al Jazeera suggest that the new government will prioritize domestic reforms and institutional consolidation over rapid changes in regional relations or global alignments. While ties with Russia may see reduced influence and relations with Israel and the EU will be reassessed, analysts predict any foreign policy transformation will be gradual rather than immediate.
+
+3. Jordan arrests three suspects over deadly church attack
+   Topic coverage: 3 source(s), 3 headline(s)
+   Article source: Al Jazeera – Breaking News, World News and Video from Al Jazeera
+   Article URL: https://www.aljazeera.com/video/newsfeed/2026/10/26/jordan-arrests-three-suspects-over-deadly-church-attack?traffic_source=rss
+   Summary: Jordanian authorities have arrested three relatives in connection with a church attack in Karak that killed eight people and wounded 40. Officials reported that the suspects were injured during a three-hour shootout and stated they have found no links to external groups.
+
+4. UN sounds the alarm over Israel's West Bank military operation
+   Topic coverage: 2 source(s), 3 headline(s)
+   Article source: Deutsche Welle
+   Article URL: https://www.dw.com/en/un-sounds-the-alarm-over-israel-s-west-bank-military-operation/a-79770228?maca=en-rss-en-all-1573-rdf
+   Summary: The United Nations, including Secretary General Antonio Guterres and Human Rights High Commissioner Volker Türk, sharply criticized Israel's military operation in Hebron, West Bank, condemning forcible displacement, home demolitions, and warning of a coercive environment with potential ethnic cleansing. The operation followed a deadly shootout involving Israeli soldiers and Palestinian gunmen, with Israeli Prime Minister Benjamin Netanyahu ordering the demolition of buildings and closures in the area ahead of Israel's general election. Israel rejected a UN report accusing it of war crimes in the West Bank as propaganda, affirming the operation aimed to dismantle terrorist infrastructure.
+
+5. Israel election: unable to vote from abroad, expats have to fly home
+   Topic coverage: 2 source(s), 3 headline(s)
+   Article source: France 24 - International breaking news, top stories and headlines
+   Article URL: https://www.france24.com/en/israel-election-unable-to-vote-from-abroad-expats-have-to-fly-home
+   Summary: Tens of thousands of Israeli expatriates are expected to fly home to vote in the upcoming election, as Israelis living abroad cannot vote from abroad. A "Fly and Vote" initiative has been set up to facilitate these trips, despite a failed petition from Netanyahu’s Likud party seeking to restrict it. Polls indicate a tight race that could determine the Prime Minister’s future.
